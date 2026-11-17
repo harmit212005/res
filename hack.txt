@@ -1,0 +1,28 @@
+xml
+________________________________________________________
+  <dependencies>
+        <dependency> 
+             <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.52.0</version>
+        
+        </dependency>
+        
+        
+    </dependencies>
+
+__________________________________________________
+
+.java
+
+public class Scatch {
+
+    public static void main(String[] args) {
+        WebDriver driver=new ChromeDriver();
+                try {
+                driver.get("https://www.google.com/");
+                driver.manage().window().maximize();
+                } finally{
+                driver.quit();}
+    }
+}
