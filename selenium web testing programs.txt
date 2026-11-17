@@ -1,0 +1,153 @@
+selenium web testing programs :
+
+1. simple just open page nad login program
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package automaticseliumdemo1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+/**
+ *
+ * @author 6STUDENT86
+ */
+public class AutomaticSeliumDemo1 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws InterruptedException {
+        // TODO code application logic here
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\PRITESH\\Downloads\\SQAT_NOTES\\setup_files_sqat\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        
+        WebDriver wd = new ChromeDriver();
+        
+        wd.manage().window().maximize();
+        
+        wd.get("http://172.16.0.1:8090/httpclient.html");
+        
+        WebElement we1 = wd.findElement(By.id("username"));
+        we1.sendKeys("25MSIT122");
+        WebElement we2 = wd.findElement(By.id("password"));
+        we2.sendKeys("patel@1309");
+        WebElement we3 = wd.findElement(By.id("loginbutton"));
+        we3.click();
+        
+        Thread.sleep(3000);
+        System.out.println("Landing Page Title:"+ wd.getTitle());
+        
+        wd.quit();
+        
+    }
+    
+}
+
+
+======================================================================================================================================
+
+
+2. open the website and then perform the operation 
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package automaticseliumdemo2;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+/**
+ *
+ * @author 6STUDENT86
+ */
+public class AutomaticSeliumDemo2 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws InterruptedException {
+        // TODO code application logic here
+        System.setProperty("webdriver.chrome.driver", "D:\\25MSIT122\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        
+        WebDriver wd = new ChromeDriver();
+        
+        wd.manage().window().maximize();
+        
+        wd.get("https://www.selenium.dev/");
+        
+        wd.findElement(By.linkText("Downloads")).click();
+        
+        Thread.sleep(2000);
+        
+        WebElement version= wd.findElement(By.xpath("//div[contains(.,'Java')]/following::div[contains(.,'Stable:')][1]"));
+        
+        System.out.println("Selenium Downloads Page Title"+ wd.getTitle());
+        System.out.println("Selenium Java Stable Version"+ version.getText());
+        
+        wd.quit();
+    }
+    
+}
+
+
+================================================================================================================================================
+
+3. same as above second program 
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package automatictestseliumdemo;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+/**
+ *
+ * @author 6STUDENT86
+ */
+public class AutomaticTestSeliumDemo {
+
+    /**
+     * @param args the command line arguments
+     * @throws java.lang.InterruptedException
+     */
+    public static void main(String[] args) throws InterruptedException {
+        // TODO code application logic here
+        
+
+        System.setProperty("webdriver.chrome.driver", "D:\\25MSIT122\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        WebDriver wd = new ChromeDriver();
+        // Chrome Google Chorme
+        wd.manage().window().maximize();
+        
+        wd.get("http://www.bing.com");
+        
+        WebElement we = wd.findElement(By.name("q"));
+        we.sendKeys("Reading every day is a simple habit that brings profound mental benefits. It sharpens your focus, expands your vocabulary, and broadens your understanding of the world around you. Even dedicating just fifteen minutes a day to a book can significantly reduce stress and improve cognitive function. By making time for reading, you invest in continuous personal growth and lifelong learning.\n" +
+"If you would like a paragraph on a different topic or with a specific word count, just let me know.");
+        we.submit();
+        Thread.sleep(1000);
+        
+        System.out.println("Page Title is :" + wd.getTitle());
+        System.out.println("Current URL is :"+ wd.getCurrentUrl());
+        
+        wd.quit();
+    }
+    
+}
+
