@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+
+months    = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+product_A = [200, 250, 300, 280, 350, 400]
+product_B = [180, 220, 270, 320, 370, 390]
+
+plt.plot(months, product_A, color="blue",  marker="o", label="Product A")
+plt.plot(months, product_B, color="green", marker="s", label="Product B")
+plt.title("Monthly Sales: Product A vs Product B")
+plt.xlabel("Month")
+plt.ylabel("Sales")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+print("Total A:", sum(product_A))
+print("Total B:", sum(product_B))
+if sum(product_A) > sum(product_B):
+    print("Product A performed better overall")
+elif sum(product_B) > sum(product_A):
+    print("Product B performed better overall")
+else:
+    print("Both performed equally")

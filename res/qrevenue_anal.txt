@@ -1,0 +1,29 @@
+import matplotlib.pyplot as plt
+
+quarters = ["Q1", "Q2", "Q3", "Q4"]
+
+revenue = []
+for quarter in quarters:
+    revenue.append(float(input("Enter revenue for " + quarter + ": ")))
+
+plt.bar(quarters, revenue, color="orange")
+for i in range(len(quarters)):
+    plt.text(i, revenue[i], "\u20b9" + format(revenue[i], ",.0f"), ha="center", va="bottom")
+
+plt.gca().yaxis.set_major_formatter(lambda x, pos: "\u20b9" + format(x, ",.0f"))
+plt.title("Quarterly Revenue")
+plt.xlabel("Quarter")
+plt.ylabel("Revenue")
+plt.tight_layout()
+plt.show()
+
+best_growth = None
+best_quarter = None
+for i in range(1, 4):
+    growth = (revenue[i] - revenue[i - 1]) / revenue[i - 1] * 100
+    print(quarters[i], "growth:", round(growth, 2), "%")
+    if best_growth is None or growth > best_growth:
+        best_growth = growth
+        best_quarter = quarters[i]
+
+print("Maximum growth:", best_quarter, "(", round(best_growth, 2), "% )")

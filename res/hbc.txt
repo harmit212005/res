@@ -1,0 +1,19 @@
+import matplotlib.pyplot as plt
+
+employees       = ["John", "Emma", "David", "Sophia", "Michael"]
+tasks_completed = [45, 60, 38, 72, 55]
+
+data  = sorted(zip(tasks_completed, employees))
+tasks = [t for t, e in data]
+names = [e for t, e in data]
+
+colors = ["skyblue"] * len(names)
+colors[-1] = "red"
+
+plt.barh(names, tasks, color=colors)
+plt.title("Tasks Completed by Employees")
+plt.xlabel("Tasks Completed")
+plt.ylabel("Employee")
+plt.show()
+
+print("Most productive employee:", names[-1], "with", tasks[-1], "tasks")

@@ -1,0 +1,16 @@
+import matplotlib.pyplot as plt
+
+categories = ["Rent", "Food", "Transport", "Utilities", "Entertainment"]
+expenses   = [15000, 7000, 3000, 2500, 2000]
+
+plt.barh(categories, expenses, color="teal")
+for i in range(len(categories)):
+    plt.text(expenses[i], i, " " + str(expenses[i]), va="center")
+plt.title("Monthly Expenses")
+plt.xlabel("Amount")
+plt.ylabel("Category")
+plt.show()
+
+top = expenses.index(max(expenses))
+print("Highest expense category:", categories[top], "-", expenses[top])
+print("Total monthly expenses:", sum(expenses))
