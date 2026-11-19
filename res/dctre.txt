@@ -1,0 +1,203 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    classification_report,
+    ConfusionMatrixDisplay
+)
+
+
+iris = load_iris(as_frame=True)
+df = iris.frame
+
+df["species"] = df["target"].map(
+    dict(enumerate(iris.target_names))
+)
+
+print(df.shape)
+print(df.columns.tolist())
+print(df.dtypes)
+print(df.isnull().sum())
+
+print("Duplicate rows:", df.duplicated().sum())
+print(df["target"].value_counts())
+print(df["target"].value_counts(normalize=True) * 100)
+print(df.describe())
+
+
+features = list(iris.feature_names)
+X = df[features]
+y = df["target"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.20,
+    random_state=42,
+    stratify=y
+)
+
+print("Training shape:", X_train.shape)
+print("Testing shape:", X_test.shape)
+print("Training target distribution:")
+print(y_train.value_counts(normalize=True))
+print("Testing target distribution:")
+print(y_test.value_counts(normalize=True))
+
+
+numeric_pipeline = Pipeline(
+    steps=[
+        ("imputer", SimpleImputer(strategy="median"))
+    ]
+)
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numeric", numeric_pipeline, features)
+    ]
+)
+
+
+decision_tree = DecisionTreeClassifier(
+    criterion="gini",
+    max_depth=4,
+    min_samples_leaf=5,
+    random_state=42
+)
+
+model = Pipeline(
+    steps=[
+        ("preprocessor", preprocessor),
+        ("classifier", decision_tree)
+    ]
+)
+
+model.fit(X_train, y_train)
+print("Decision tree model trained successfully")
+
+
+y_pred = model.predict(X_test)
+y_probabilities = model.predict_proba(X_test)
+confidence = y_probabilities.max(axis=1)
+
+results = pd.DataFrame({
+    "Actual": y_test.values,
+    "Predicted": y_pred,
+    "Actual_Species": [
+        iris.target_names[index] for index in y_test.values
+    ],
+    "Predicted_Species": [
+        iris.target_names[index] for index in y_pred
+    ],
+    "Confidence": confidence
+})
+
+print(results.head(10))
+
+
+for index, species in enumerate(iris.target_names):
+    actual_count = results[results["Actual"] == index]
+    correct_count = actual_count[
+        actual_count["Predicted"] == index
+    ]
+
+    recall = len(correct_count) / len(actual_count) * 100
+
+    print(
+        species,
+        "| actual:", len(actual_count),
+        "| predicted correctly:", len(correct_count),
+        "| recall:", round(recall, 2), "%"
+    )
+
+
+incorrect_predictions = results[
+    results["Actual"] != results["Predicted"]
+]
+
+print(incorrect_predictions)
+print("Total wrong predictions:", len(incorrect_predictions))
+
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", round(accuracy * 100, 2), "%")
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nClassification Report:")
+print(
+    classification_report(
+        y_test,
+        y_pred,
+        target_names=list(iris.target_names),
+        zero_division=0
+    )
+)
+
+
+ConfusionMatrixDisplay.from_predictions(
+    y_test,
+    y_pred,
+    display_labels=list(iris.target_names)
+)
+
+plt.title("Decision Tree - Confusion Matrix")
+plt.tight_layout()
+plt.show()
+
+
+feature_names = model.named_steps["preprocessor"].get_feature_names_out()
+
+plt.figure(figsize=(22, 12))
+
+plot_tree(
+    model.named_steps["classifier"],
+    feature_names=feature_names,
+    class_names=list(iris.target_names),
+    filled=True,
+    rounded=True,
+    fontsize=16
+)
+
+plt.title("Decision Tree")
+plt.tight_layout()
+plt.show()
+
+
+importance = pd.Series(
+    model.named_steps["classifier"].feature_importances_,
+    index=feature_names
+).sort_values()
+
+print("Feature Importance:")
+print(importance.round(4))
+
+importance.plot(
+    kind="barh",
+    title="Feature Importance"
+)
+plt.tight_layout()
+plt.show()
+
+
+new_flower = pd.DataFrame(
+    [[6.0, 2.9, 4.5, 1.5]],
+    columns=features
+)
+
+prediction = model.predict(new_flower)[0]
+
+print("Predicted species:", iris.target_names[prediction])
+print(
+    "Probabilities:",
+    model.predict_proba(new_flower).round(3)
+)
